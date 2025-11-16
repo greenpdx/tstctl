@@ -29,21 +29,21 @@ USB gadget mode allows devices to act as USB peripherals, presenting themselves 
 - `ip` command (iproute2 package)
 - TestCtl master binary
 
-### Remote Side (UUT/Slave - OpenWrt Device)
+### Remote Side (UUT/Slave - CRRouter Device)
 
 **Hardware Requirements:**
 - Device with USB OTG/gadget support
-- Most modern OpenWrt-capable devices support this
+- Most modern CRRouter-capable devices support this
 
 **Software:**
-- OpenWrt with USB gadget kernel modules
+- CRRouter with USB gadget kernel modules
 - TestCtl remote binary
 
 ## Linux Kernel Requirements
 
 ### Required Kernel Modules
 
-**On Remote (OpenWrt):**
+**On Remote (CRRouter):**
 ```bash
 # Load USB gadget modules
 modprobe libcomposite
@@ -80,7 +80,7 @@ sudo mount -t configfs none /sys/kernel/config
 
 TestCtl can automatically configure USB gadget networking.
 
-### On Remote (OpenWrt Device)
+### On Remote (CRRouter Device)
 
 ```bash
 # One-time setup (creates USB gadget device)
@@ -108,7 +108,7 @@ sudo ip link set usb0 up
 
 ## Manual Setup (Advanced)
 
-### Remote Side (OpenWrt)
+### Remote Side (CRRouter)
 
 #### 1. Mount ConfigFS
 
@@ -227,9 +227,9 @@ sudo nmcli connection add type ethernet ifname usb0 con-name testctl \
 sudo nmcli connection up testctl
 ```
 
-## OpenWrt Persistence
+## CRRouter Persistence
 
-To make USB gadget configuration persistent on OpenWrt:
+To make USB gadget configuration persistent on CRRouter:
 
 ### Create Init Script
 
@@ -319,7 +319,7 @@ sudo testctl-remote --setup-gadget
 
 ### Module Not Found
 
-Install required packages on OpenWrt:
+Install required packages on CRRouter:
 ```bash
 opkg update
 opkg install kmod-usb-gadget kmod-usb-gadget-eth
@@ -372,4 +372,4 @@ sudo ip link set usb1 up
 
 - [Linux USB Gadget API](https://www.kernel.org/doc/html/latest/usb/gadget.html)
 - [ConfigFS USB Gadget](https://www.kernel.org/doc/html/latest/usb/gadget_configfs.html)
-- [OpenWrt USB Configuration](https://openwrt.org/docs/guide-user/hardware/usb)
+- [USB Configuration Documentation](https://openwrt.org/docs/guide-user/hardware/usb)
