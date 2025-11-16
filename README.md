@@ -10,11 +10,11 @@ Rust implementation of a test control protocol for coordinating automated tests 
 └────┬─────┘
      │
      ├─── USB Gadget (usb0) ──→ ┌──────┐
-     │                           │ UUT  │ (Unit Under Test - OpenWrt device)
+     │                           │ UUT  │ (Unit Under Test - CRRouter device)
      │                           └──────┘
      │
      └─── USB Gadget (usb1) ──→ ┌──────┐
-                                 │Slave │ (Helper device - OpenWrt device)
+                                 │Slave │ (Helper device - CRRouter device)
                                  └──────┘
 ```
 
@@ -109,9 +109,9 @@ USB gadget client mode requires a device that supports USB OTG/gadget. For testi
 - Raspberry Pi (Zero, 4, 5)
 - Any Linux device with USB gadget support
 
-### On OpenWrt (Remote - UUT/Slave)
+### On CRRouter (Remote - UUT/Slave)
 
-Most OpenWrt devices support USB gadget mode. The `--setup-gadget` flag configures:
+Most CRRouter devices support USB gadget mode. The `--setup-gadget` flag configures:
 
 1. Loads kernel modules (if needed)
 2. Configures USB gadget via configfs

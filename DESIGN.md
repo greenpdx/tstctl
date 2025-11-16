@@ -554,7 +554,7 @@ execute:
 
 ### Option 1: USB Serial (Simple, Reliable)
 
-**UUT Setup** (OpenWrt):
+**UUT Setup** (CRRouter):
 ```bash
 # Load USB serial gadget
 modprobe g_serial
@@ -570,7 +570,7 @@ modprobe g_serial
 
 ### Option 2: USB Ethernet Gadget (Higher Bandwidth)
 
-**UUT Setup** (OpenWrt):
+**UUT Setup** (CRRouter):
 ```bash
 # Load USB ethernet gadget
 modprobe g_ether
