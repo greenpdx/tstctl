@@ -143,6 +143,9 @@ pub fn setup_usb_gadget(config: &UsbGadgetConfig) -> Result<()> {
 
     // This requires root privileges and configfs support
 
+    // Wait for interface to appear (important for master/host side)
+    wait_for_interface(&config.interface, 30)?;
+
     // 1. Configure IP address
     let status = Command::new("ip")
         .args([
@@ -177,6 +180,43 @@ pub fn setup_usb_gadget(config: &UsbGadgetConfig) -> Result<()> {
     );
 
     Ok(())
+}
+
+/// Wait for a network interface to appear
+fn wait_for_interface(interface: &str, timeout_secs: u64) -> Result<()> {
+    use std::process::Command;
+    use std::thread;
+    use std::time::{Duration, Instant};
+
+    let start = Instant::now();
+    let timeout = Duration::from_secs(timeout_secs);
+
+    tracing::info!("Waiting for interface {} to appear...", interface);
+
+    loop {
+        // Check if interface exists using 'ip link show <interface>'
+        let output = Command::new("ip")
+            .args(["link", "show", interface])
+            .output()
+            .context("Failed to check interface")?;
+
+        if output.status.success() {
+            tracing::info!("Interface {} is now available", interface);
+            return Ok(());
+        }
+
+        if start.elapsed() >= timeout {
+            anyhow::bail!(
+                "Timeout waiting for interface {} to appear. \
+                Make sure the USB gadget device is set up on the remote side \
+                and the USB cable is connected.",
+                interface
+            );
+        }
+
+        // Wait a bit before checking again
+        thread::sleep(Duration::from_millis(500));
+    }
 }
 
 /// Setup USB gadget device (configfs)
