@@ -247,6 +247,28 @@ pub fn setup_usb_gadget_device() -> Result<()> {
             fs::write(gadget_path.join("UDC"), udc_name.to_str().unwrap())
                 .context("Failed to bind to UDC")?;
             tracing::info!("USB gadget device enabled");
+
+            // Wait for the network interface to appear
+            // The kernel needs time to create the interface after binding to UDC
+            let max_wait = std::time::Duration::from_secs(5);
+            let check_interval = std::time::Duration::from_millis(100);
+            let start = std::time::Instant::now();
+
+            tracing::info!("Waiting for usb0 interface to appear...");
+            loop {
+                // Check if interface exists in /sys/class/net
+                if Path::new("/sys/class/net/usb0").exists() {
+                    tracing::info!("usb0 interface is now available");
+                    break;
+                }
+
+                if start.elapsed() > max_wait {
+                    tracing::warn!("Timeout waiting for usb0 interface to appear");
+                    break;
+                }
+
+                std::thread::sleep(check_interval);
+            }
         } else {
             tracing::warn!("No UDC found - USB gadget may not work");
         }
